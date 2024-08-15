@@ -3,8 +3,10 @@ package com.softuni.book_server.web;
 
 import com.softuni.book_server.model.dto.BookDTO;
 import com.softuni.book_server.service.BookService;
+import org.apache.juli.logging.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,18 @@ public class BooksRestController {
         bookService.deleteBookById(id);
 
         return  ResponseEntity.noContent().build();
+
+    }
+
+    @PostMapping
+    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO, UriComponentsBuilder uriComponentsBuilder){
+
+        long newBookId = bookService.createBook(bookDTO);
+
+        System.out.println(bookDTO);
+
+        return ResponseEntity.created(
+                uriComponentsBuilder.path("/api/books/{id}").build(newBookId)).build();
 
     }
 }
